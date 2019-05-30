@@ -101,3 +101,19 @@ $ env LANG=en_US.UTF-8 \
     _build/prod/rel/hello/bin/hello console
 ```
 
+## Unpack the tarball
+
+Inside the tarball are a couple of files we are interested in -
+`vm.args` and `sys.config` in particular, but feel free to browse
+around - you'll see a number of files of general interest here.
+
+```
+$ export TMPDIR=$(mktemp -d)
+$ tar -xzC $TMPDIR -f $(find _build/prod/rel -name \*.tar.gz)
+$ less $(find $TMPDIR -name sys.config -o -name vm.args)
+```
+
+These files are what you'll want to plug into your config management
+software, so you can separate the secrets inside from the package we'll
+be deploying.
+
