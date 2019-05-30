@@ -47,3 +47,7 @@ Prepend  `{:distillery, "~> 2.0", runtime: false},`  to your
 ```
 $ mix do deps.get, deps.compile, compile
 ```
+
+## Prepare the release
+
+Initialise your release configuration via `mix release.init`
