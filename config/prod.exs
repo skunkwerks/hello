@@ -10,7 +10,10 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :hello, HelloWeb.Endpoint,
-  url: [host: "example.com", port: 80],
+  url: [host: "example.net", port: 4003],
+  server: true,
+  http: [port: 4003],
+  secret_key_base: "overwritten_by_deployment_tools",
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
@@ -62,4 +65,3 @@ config :logger, level: :info
 
 # Finally import the config/prod.secret.exs which loads secrets
 # and configuration from environment variables.
-import_config "prod.secret.exs"

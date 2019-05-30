@@ -64,3 +64,40 @@ We'll use these config files later within FreeBSD to override the
 configuration with appropriate run-time secrets, so we don't have to
 store anything in the source code, or package tarball, that can be used
 by an attacker against us.
+
+## Modify `config/prod.*` files
+
+As we will be overwriting all the secret values via `sys.config` and
+`vm.args`, we don't need the additional and IMO very confusing runtime
+hacks that try to merge in files from both environment variables and
+existing compiled-in settings.
+
+You'll need to set port number and hostname in `config/prod.exs`, and
+We also need a `secret_key_base` that is used to keep user sessions
+encrypted. I believe that this can be different for each session of
+phoenix, so later on you can set it as a runtime variable.
+
+A typical `config/prod.exs` might be:
+
+```elixir
+config :hello, HelloWeb.Endpoint,
+  url: [host: "example.net", port: 4003],
+  server: true,
+  http: [port: 4003],
+  secret_key_base: "overwritten_by_deployment_tools",
+   cache_static_manifest: "priv/static/cache_manifest.json"
+```
+
+## Build the release manually and test it
+
+```
+$ mix phx.digest
+$ env LANG=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8 \
+    MIX_ENV=prod \
+    mix release --env=prod
+$ env LANG=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8 \
+    _build/prod/rel/hello/bin/hello console
+```
+
