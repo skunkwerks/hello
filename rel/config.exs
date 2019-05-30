@@ -11,7 +11,7 @@ use Mix.Releases.Config,
     # This sets the default release built by `mix release`
     default_release: :default,
     # This sets the default environment used by `mix release`
-    default_environment: Mix.env()
+    default_environment: "prod"
 
 # For a full list of config options for both releases
 # and environments, visit https://hexdocs.pm/distillery/config/distillery.html
@@ -31,13 +31,13 @@ environment :dev do
   # dev mode.
   set dev_mode: true
   set include_erts: false
-  set cookie: :"[o!;M>eKH&ns&LikYU8M.WzID1uP8@Z.4>hQGnhE3G4%JicS@SiIw2Lqm[G?>`qd"
+  set cookie: :"nomnomnom"
 end
 
 environment :prod do
-  set include_erts: true
+  set include_erts: false
   set include_src: false
-  set cookie: :"g:rv(InyX%}I!O>[(]As&o$CwT^ro8zmAbpT_RB`zG(]?<@_e{RQRo/P~5H*7aMk"
+  set cookie: :"overwritten_by_deployment_tools"
   set vm_args: "rel/vm.args"
 end
 
@@ -47,7 +47,7 @@ end
 # will be used by default
 
 release :hello do
-  set version: current_version(:hello)
+  set version: System.cmd("git", ~w[describe --dirty --abbrev=7 --tags --always --first-parent]) |> elem(0) |> String.split("-") |> List.first() |> String.replace_prefix("v","") |> String.trim()
   set applications: [
     :runtime_tools
   ]
