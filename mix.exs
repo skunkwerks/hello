@@ -1,13 +1,16 @@
 defmodule Hello.MixProject do
   use Mix.Project
 
-  def project do
+  def project() do
+    {git_tag, description} = git_version()
+
     [
       app: :hello,
-      version: "0.1.0",
-      elixir: "~> 1.5",
+      version: git_tag,
+      elixir: "~> 1.8",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
+      description: "hello" <> description,
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
@@ -42,4 +45,28 @@ defmodule Hello.MixProject do
       {:plug_cowboy, "~> 2.0"}
     ]
   end
+
+  defp git_version() do
+    # pulls version information from "nearest" git tag or sha hash-ish
+    {hashish, 0} =
+      System.cmd("git", ~w[describe --dirty --abbrev=7 --tags --always --first-parent])
+
+    full_version = String.trim(hashish)
+
+    tag_version =
+      hashish
+      |> String.split("-")
+      |> List.first()
+      |> String.replace_prefix("v", "")
+      |> String.trim()
+
+    tag_version =
+      case Version.parse(tag_version) do
+        :error -> "0.0.0-#{tag_version}"
+        _ -> tag_version
+      end
+
+    {tag_version, full_version}
+  end
+
 end

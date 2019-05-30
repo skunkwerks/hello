@@ -1,0 +1,28 @@
+name:         hello
+origin:       local/hello
+comment:      "The first draft of anything is shit."
+arch:         freebsd:12:x86:64
+www:          https://github.com/skunkwerks/hello
+maintainer:   hello@example.net
+prefix:       /usr/local
+licenselogic: single
+licenses:     [MIT]
+categories:   [local]
+deps:         {erlang-runtime22: {origin: lang/erlang-runtime22, version: "22"}}
+flatsize:     0
+options:      {git: "GITSHA"}
+desc:         <<EOD
+There is nothing to writing. All you do is sit down at a typewriter and bleed.
+EOD
+
+message:      <<EOM
+The best people possess a feeling for beauty, the courage to take risks, the
+discipline to tell the truth, the capacity for sacrifice. Ironically, their
+virtues make them vulnerable; they are often wounded, sometimes destroyed.
+
+Ensure that you have the following config files in place:
+
+- /etc/rc.conf.d/hello
+- /usr/local/etc/hello/vm.args
+- /usr/local/etc/hello/sys.config
+EOM

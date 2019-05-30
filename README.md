@@ -117,3 +117,59 @@ These files are what you'll want to plug into your config management
 software, so you can separate the secrets inside from the package we'll
 be deploying.
 
+## Include FreeBSD scripts
+
+In `rel/freebsd/` we now have 3 templates:
+
+- a [pkg-create(8)] manifest file we'll use to build a deployable pkg
+- an rc.d script that will end up in /usr/local/etc/rc.d/hello
+- app.sh to enable running the app in the foreground for debugging
+
+These are generic and can largely be re-used for any app without
+tweaking - the new `./build.sh` script uses the name of the root
+directory of this repo to customise the 3 templates, and to take the
+release tarball, extract it, and prepare a deployable FreeBSD package
+from it.
+
+Note that the package itself can be put into a custom package
+repository, which then can be deployed via `pkg install -r local app`
+and thus also automatically upgraded via `pkg upgrade` too.
+
+For this to work, it is recommended to use git tags liberally, and the
+build script will re-use these to generate both the release name, and
+the resulting package as well, by injecting this into the package
+metadata.
+
+## Create a package
+
+Using all the above, let's tag this as `0.0.1` and let things run.
+
+```
+$ git tag 0.0.1
+$ ./build.sh
+...
+```
+
+##  Runtime Concerns
+
+### epmd
+
+One of the tweaks in the above config is that we *explicitly* don't
+start epmd. There are reasons for this:
+
+- epmd shouldn't run under the same user process as our app
+- epmd by default will listen on all interfaces and ports
+
+That's not a particularly secure setup, and we want a bit more control
+over it. epmd should run under a low-privileged account, with loopback
+access only unless we explicitly need distributed nodes.
+
+### sys.config and vm.args
+
+You'll also need to put appropriate config files into /usr/local/etc/APP
+and make sure the permissions and ownership match.
+
+### loggging
+
+I recommend logging directly to syslog, using `logger_syslog_backend`
+on hex.
