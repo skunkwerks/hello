@@ -8,12 +8,42 @@ To start your Phoenix server:
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+# FreeBSD Hello
 
-## Learn more
+This is a quick skeleton app to show how to use distillery
+and FreeBSD to ship Elixir and Erlang-based daemons via
+FreeBSD's amazing pkg toolkit.
 
-  * Official website: http://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Mailing list: http://groups.google.com/group/phoenix-talk
-  * Source: https://github.com/phoenixframework/phoenix
+## Pre-requisites
+
+Install elixir, hex, latest OTP, then Phoenix direct from upstream, and
+update your PATH:
+
+```
+$ sudo pkg install -r FreeBSD -y \
+    devel/elixir-hex \
+    devel/rebar \
+    devel/rebar3 \
+    lang/erlang-runtime22
+$ mix archive.install hex phx_new 1.4.6
+$ export PATH=/usr/local/lib/erlang22/bin:$PATH
+```
+
+## Phoenix
+
+Create a minimal app, and confirm it runs:
+
+```
+$ mix phx.new --no-ecto hello
+$ cd hello
+$ mix phx.server
+```
+
+## Add distillery
+
+Prepend  `{:distillery, "~> 2.0", runtime: false},`  to your
+`defp deps() do [ ....` function, then:
+
+```
+$ mix do deps.get, deps.compile, compile
+```
