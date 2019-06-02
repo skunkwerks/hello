@@ -35,6 +35,7 @@ defmodule Hello.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:vault_config_provider, "~> 0.1"},
       {:distillery, "~> 2.0", runtime: false},
       {:phoenix, "~> 1.4.6"},
       {:phoenix_pubsub, "~> 1.1"},

@@ -16,6 +16,10 @@ config :hello, HelloWeb.Endpoint,
   secret_key_base: "overwritten_by_deployment_tools",
   cache_static_manifest: "priv/static/cache_manifest.json"
 
+config :vaultex,
+  vault_ssl_verify: true,
+  vault_addr: "https://vault.koan-ci.com:8200/"
+
 # Do not print debug messages in production
 config :logger, level: :info
 
