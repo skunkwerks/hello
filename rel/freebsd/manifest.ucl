@@ -8,7 +8,6 @@ prefix:       /usr/local
 licenselogic: single
 licenses:     [MIT]
 categories:   [local]
-deps:         {erlang-runtime22: {origin: lang/erlang-runtime22, version: "22"}}
 flatsize:     0
 options:      {git: "GITSHA"}
 desc:         <<EOD

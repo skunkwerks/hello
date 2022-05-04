@@ -35,7 +35,7 @@ environment :dev do
 end
 
 environment :prod do
-  set include_erts: false
+  set include_erts: true
   set include_src: false
   set cookie: :"overwritten_by_deployment_tools"
   set vm_args: "rel/vm.args"
