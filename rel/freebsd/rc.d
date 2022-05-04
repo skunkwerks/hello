@@ -9,8 +9,6 @@
 
 name="APP"
 rcvar="${name}_enable"
-install_dir="/usr/local/lib/${name}"
-version=$(cut -wf 2 ${install_dir}/releases/start_erl.data)
 
 extra_commands="status"
 start_cmd="${name}_start"
@@ -19,16 +17,21 @@ status_cmd="${name}_status"
 
 load_rc_config $name
 : ${APP_enable:="no"}
-: ${APP_verbose:=""}
-: ${APP_user:="www"}
-: ${APP_command=/usr/local/bin/${name}}
+: ${APP_user:="APP"}
+: ${APP_zflags:="-start_epmd true"}
+: ${APP_command="/usr/local/lib/APP/bin/APP"}
 
 APP_run()
 {
-umask 027
- /usr/bin/env \
-  ERL_ZFLAGS="-detached" \
-  su -m "${APP_user}" -c "${APP_command}"
+umask 077
+/usr/bin/env \
+  HOME="/var/run/APP" \
+  RELEASE_COOKIE="ignored_but_elixir_wants_it_my_precioussss" \
+  RELEASE_TMP="/var/run/APP" \
+  RELEASE_VM_ARGS="/usr/local/etc/APP/vm.args" \
+  RELEASE_SYS_CONFIG="/usr/local/etc/APP/APP" \
+  ERL_ZFLAGS="${APP_zflags}" \
+  su -m "${APP_user}" -c "${APP_command} daemon"
 }
 
 # On each run, we ensure we are starting from a clean slate.
@@ -60,3 +63,4 @@ APP_status()
 
 load_rc_config $name
 run_rc_command "$1"
+
